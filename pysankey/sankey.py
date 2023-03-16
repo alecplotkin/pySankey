@@ -56,6 +56,7 @@ def check_data_matches_labels(labels, data, side):
 
 def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=None,
            leftLabels=None, rightLabels=None, aspect=4, rightColor=False,
+           showLeftLabels=True, showRightLabels=True,
            fontsize=14, figureName=None, closePlot=False, title=None):
     '''
     Make Sankey Diagram showing flow from left-->right
@@ -192,13 +193,14 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
             color=colorDict[leftLabel],
             alpha=0.99
         )
-        ax.text(
-            -0.05 * xMax,
-            leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
-            leftLabel,
-            {'ha': 'right', 'va': 'center'},
-            fontsize=fontsize
-        )
+        if showLeftLabels:
+            ax.text(
+                -0.05 * xMax,
+                leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
+                leftLabel,
+                {'ha': 'right', 'va': 'center'},
+                fontsize=fontsize
+            )
     for rightLabel in rightLabels:
         ax.fill_between(
             [xMax, 1.02 * xMax], 2 * [rightWidths[rightLabel]['bottom']],
@@ -206,13 +208,14 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
             color=colorDict[rightLabel],
             alpha=0.99
         )
-        ax.text(
-            1.05 * xMax,
-            rightWidths[rightLabel]['bottom'] + 0.5 * rightWidths[rightLabel]['right'],
-            rightLabel,
-            {'ha': 'left', 'va': 'center'},
-            fontsize=fontsize
-        )
+        if showRightLabels:
+            ax.text(
+                1.05 * xMax,
+                rightWidths[rightLabel]['bottom'] + 0.5 * rightWidths[rightLabel]['right'],
+                rightLabel,
+                {'ha': 'left', 'va': 'center'},
+                fontsize=fontsize
+            )
 
     # Plot strips
     for leftLabel in leftLabels:
