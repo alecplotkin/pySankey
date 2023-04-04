@@ -56,27 +56,31 @@ def check_data_matches_labels(labels, data, side):
 
 def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=None,
            leftLabels=None, rightLabels=None, aspect=4, rightColor=False,
-           showLeftLabels=True, showRightLabels=True,
+           showLeftLabels=True, showRightLabels=True, stripWidth=0.02, textPad=0.03,
            fontsize=14, figureName=None, closePlot=False, title=None):
     '''
     Make Sankey Diagram showing flow from left-->right
 
-    Inputs:
-        left = NumPy array of object labels on the left of the diagram
-        right = NumPy array of corresponding labels on the right of the diagram
+    Args:
+        left: NumPy array of object labels on the left of the diagram
+        right: NumPy array of corresponding labels on the right of the diagram
             len(right) == len(left)
-        leftWeight = NumPy array of weights for each strip starting from the
+        leftWeight: NumPy array of weights for each strip starting from the
             left of the diagram, if not specified 1 is assigned
-        rightWeight = NumPy array of weights for each strip starting from the
+        rightWeight: NumPy array of weights for each strip starting from the
             right of the diagram, if not specified the corresponding leftWeight
             is assigned
-        colorDict = Dictionary of colors to use for each label
+        colorDict: Dictionary of colors to use for each label
             {'label':'color'}
-        leftLabels = order of the left labels in the diagram
-        rightLabels = order of the right labels in the diagram
-        aspect = vertical extent of the diagram in units of horizontal extent
-        rightColor = If true, each strip in the diagram will be be colored
+        leftLabels: order of the left labels in the diagram
+        rightLabels: order of the right labels in the diagram
+        aspect: vertical extent of the diagram in units of horizontal extent
+        rightColor: If true, each strip in the diagram will be be colored
                     according to its left label
+        showLeftLabels: whether to show the left labels on the plot.
+        showRightLabels: whether to show the right labels on the plot.
+        stripWidth: width of the label strips, as a fraction of the plot area.
+        textPad: space between the strips and text labels.
     Ouput:
         None
     '''
@@ -183,11 +187,11 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
 
     # Total vertical extent of diagram
     xMax = topEdge / aspect
-
+    
     # Draw vertical bars on left and right of each  label's section & print label
     for leftLabel in leftLabels:
         ax.fill_between(
-            [-0.02 * xMax, 0],
+            [(0-stripWidth) * xMax, 0],
             2 * [leftWidths[leftLabel]['bottom']],
             2 * [leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']],
             color=colorDict[leftLabel],
@@ -195,29 +199,31 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
         )
         if showLeftLabels:
             ax.text(
-                -0.05 * xMax,
+                (0-stripWidth-textPad) * xMax,
                 leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
                 leftLabel,
                 {'ha': 'right', 'va': 'center'},
-                fontsize=fontsize
+                fontsize=fontsize,
+                color=colorDict[leftLabel]
             )
     for rightLabel in rightLabels:
         ax.fill_between(
-            [xMax, 1.02 * xMax], 2 * [rightWidths[rightLabel]['bottom']],
+            [xMax, (1+stripWidth) * xMax], 2 * [rightWidths[rightLabel]['bottom']],
             2 * [rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']],
             color=colorDict[rightLabel],
             alpha=0.99
         )
         if showRightLabels:
             ax.text(
-                1.05 * xMax,
+                (1+stripWidth+textPad) * xMax,
                 rightWidths[rightLabel]['bottom'] + 0.5 * rightWidths[rightLabel]['right'],
                 rightLabel,
                 {'ha': 'left', 'va': 'center'},
-                fontsize=fontsize
+                fontsize=fontsize,
+                color=colorDict[rightLabel]
             )
 
-    # Plot strips
+        # Plot strips
     for leftLabel in leftLabels:
         for rightLabel in rightLabels:
             labelColor = leftLabel
