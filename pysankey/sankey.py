@@ -56,8 +56,9 @@ def check_data_matches_labels(labels, data, side):
 
 def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=None,
            leftLabels=None, rightLabels=None, aspect=4, rightColor=False,
-           showLeftLabels=True, showRightLabels=True, stripWidth=0.02, textPad=0.03,
-           fontsize=14, figureName=None, closePlot=False, title=None):
+           showLeftLabels=True, showRightLabels=True, stripWidth=0.02, 
+           wrapText=True, textPad=0.03, fontsize=14, figureName=None,
+           closePlot=False, title=None):
     '''
     Make Sankey Diagram showing flow from left-->right
 
@@ -190,6 +191,9 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
     
     # Draw vertical bars on left and right of each  label's section & print label
     for leftLabel in leftLabels:
+        if wrapText:
+            leftLabelFormat = leftLabel.replace(' ', '\n')
+        
         ax.fill_between(
             [(0-stripWidth) * xMax, 0],
             2 * [leftWidths[leftLabel]['bottom']],
@@ -201,12 +205,15 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
             ax.text(
                 (0-stripWidth-textPad) * xMax,
                 leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
-                leftLabel,
+                leftLabelFormat,
                 {'ha': 'right', 'va': 'center'},
                 fontsize=fontsize,
                 color=colorDict[leftLabel]
             )
     for rightLabel in rightLabels:
+        if wrapText:
+            rightLabelFormat = rightLabel.replace(' ', '\n')
+        
         ax.fill_between(
             [xMax, (1+stripWidth) * xMax], 2 * [rightWidths[rightLabel]['bottom']],
             2 * [rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']],
@@ -217,7 +224,7 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
             ax.text(
                 (1+stripWidth+textPad) * xMax,
                 rightWidths[rightLabel]['bottom'] + 0.5 * rightWidths[rightLabel]['right'],
-                rightLabel,
+                rightLabelFormat,
                 {'ha': 'left', 'va': 'center'},
                 fontsize=fontsize,
                 color=colorDict[rightLabel]
