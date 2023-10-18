@@ -169,7 +169,7 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
         else:
             myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + 0.02 * dataFrame.leftWeight.sum()
             myD['top'] = myD['bottom'] + myD['left']
-            topEdge = myD['top']
+        topEdge = myD['top']
         leftWidths[leftLabel] = myD
 
     # Determine positions of right label patches and total widths
@@ -183,7 +183,7 @@ def sankey(left, right, ax=None, leftWeight=None, rightWeight=None, colorDict=No
         else:
             myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + 0.02 * dataFrame.rightWeight.sum()
             myD['top'] = myD['bottom'] + myD['right']
-            topEdge = myD['top']
+        topEdge = myD['top']
         rightWidths[rightLabel] = myD
 
     # Total vertical extent of diagram
